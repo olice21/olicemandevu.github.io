@@ -1,0 +1,834 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+<meta charset="UTF-8" />
+<meta name="viewport" content="width=device-width, initial-scale=1.0" />
+<title>OLICE MANDEVU — Data Analyst / Engineer / Scientist</title>
+<link rel="preconnect" href="https://fonts.googleapis.com">
+<link href="https://fonts.googleapis.com/css2?family=JetBrains+Mono:wght@400;500;700;800&family=Inter:wght@400;500;600;700&display=swap" rel="stylesheet">
+<style>
+  :root{
+    --bg: #0B0F14;
+    --surface: #10161D;
+    --surface-2: #141C25;
+    --line: #1E2733;
+    --text: #E7EDF3;
+    --muted: #7C8B9A;
+    --signal: #F2B84B;
+    --stream: #4FD1C5;
+  }
+  *{box-sizing:border-box; margin:0; padding:0;}
+  html{scroll-behavior:smooth;}
+  body{
+    background: var(--bg);
+    font-family:'Inter', sans-serif;
+    color: var(--text);
+    line-height:1.6;
+  }
+  a{color:inherit;}
+  .wrap{ max-width:1100px; margin:0 auto; padding:0 24px; }
+  section{ padding:80px 0; border-bottom:1px solid var(--line); }
+  .eyebrow{
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px;
+    letter-spacing:0.14em;
+    text-transform:uppercase;
+    color: var(--stream);
+    display:flex;
+    align-items:center;
+    gap:8px;
+    margin-bottom:20px;
+  }
+  .eyebrow::before{
+    content:"";
+    width:7px; height:7px;
+    border-radius:50%;
+    background: var(--stream);
+    box-shadow: 0 0 8px var(--stream);
+  }
+  h2{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:700;
+    font-size: clamp(24px, 3vw, 32px);
+    margin-bottom:32px;
+  }
+
+  /* ===== NAV ===== */
+  nav{
+    position:sticky; top:0; z-index:50;
+    background: rgba(11,15,20,0.85);
+    backdrop-filter: blur(8px);
+    border-bottom:1px solid var(--line);
+  }
+  nav .wrap{
+    display:flex; align-items:center; justify-content:space-between;
+    padding:16px 24px;
+  }
+  nav .brand{ font-family:'JetBrains Mono', monospace; font-weight:700; }
+  nav .brand .dot{ color: var(--signal); }
+  nav ul{ list-style:none; display:flex; gap:28px; }
+  nav a{ text-decoration:none; font-size:14px; color: var(--muted); transition:color .15s; }
+  nav a:hover{ color: var(--text); }
+  .nav-toggle{ display:none; background:none; border:none; color:var(--text); font-size:22px; cursor:pointer; }
+  @media (max-width:720px){
+    nav ul{ display:none; position:absolute; top:100%; left:0; right:0; background:var(--surface); flex-direction:column; padding:16px 24px; gap:16px; border-bottom:1px solid var(--line); }
+    nav ul.open{ display:flex; }
+    .nav-toggle{ display:block; }
+  }
+
+  /* ===== HEADER / HERO ===== */
+  .header{
+    position:relative;
+    padding:90px 0 70px;
+    overflow:hidden;
+    border-bottom:1px solid var(--line);
+  }
+  .header-grid{
+    position:absolute; inset:0;
+    background:
+      repeating-linear-gradient(0deg, transparent, transparent 39px, rgba(255,255,255,0.03) 40px),
+      repeating-linear-gradient(90deg, transparent, transparent 39px, rgba(255,255,255,0.03) 40px);
+    pointer-events:none;
+  }
+  .stream-col{
+    position:absolute; top:-40px;
+    font-family:'JetBrains Mono', monospace;
+    font-size:12px; color: var(--stream); opacity:0.12;
+    white-space:pre; line-height:1.5em;
+    animation: fall linear infinite;
+    pointer-events:none;
+  }
+  @keyframes fall{ from{ transform: translateY(-100%);} to{ transform: translateY(500px);} }
+
+  .identity{
+    display:flex;
+    align-items:center;
+    gap:24px;
+    position:relative; z-index:2;
+  }
+  .avatar{
+    width:96px; height:96px;
+    border-radius:50%;
+    border:2px solid var(--line);
+    box-shadow: 0 0 0 4px rgba(79,209,197,0.08);
+    object-fit:cover;
+    flex-shrink:0;
+    background: var(--surface-2);
+  }
+  .avatar-placeholder{
+    width:96px; height:96px;
+    border-radius:50%;
+    border:2px dashed var(--line);
+    box-shadow: 0 0 0 4px rgba(79,209,197,0.08);
+    flex-shrink:0;
+    background: var(--surface-2);
+    display:flex; align-items:center; justify-content:center;
+    color: var(--muted);
+  }
+  .avatar-placeholder svg{ width:34px; height:34px; }
+  .name{
+    font-family:'JetBrains Mono', monospace;
+    font-weight:800;
+    font-size:clamp(30px, 5.5vw, 60px);
+    letter-spacing:-0.01em; line-height:1.05;
+  }
+  @media (max-width:560px){
+    .identity{ gap:16px; }
+    .avatar, .avatar-placeholder{ width:64px; height:64px; }
+    .avatar-placeholder svg{ width:24px; height:24px; }
+  }
+  .role-line{
+    margin-top:16px;
+    font-family:'JetBrains Mono', monospace;
+    font-size: clamp(16px, 2.2vw, 21px);
+    color: var(--muted);
+    display:flex; align-items:center; gap:10px;
+    position:relative; z-index:2;
+  }
+  .prompt{ color: var(--signal); }
+  #role-word{ color: var(--text); font-weight:500; }
+  .cursor{
+    display:inline-block; width:9px; height:1.1em;
+    background: var(--signal); animation: blink 1s step-end infinite;
+    transform: translateY(2px);
+  }
+  @keyframes blink{ 50%{ opacity:0; } }
+
+  .tagline{
+    margin-top:22px; max-width:560px; color: var(--muted);
+    font-size:15px; position:relative; z-index:2;
+  }
+
+  .divider{ margin:34px 0 26px; height:1px; background: var(--line); position:relative; z-index:2; }
+
+  .contacts{ display:flex; flex-wrap:wrap; gap:12px; position:relative; z-index:2; }
+  .contact-chip{
+    display:flex; align-items:center; gap:8px;
+    padding:10px 16px; border:1px solid var(--line); border-radius:8px;
+    text-decoration:none; font-family:'JetBrains Mono', monospace; font-size:13px;
+    background: rgba(255,255,255,0.01);
+    transition: border-color .15s ease, background .15s ease, transform .15s ease;
+  }
+  .contact-chip:hover{ border-color: var(--stream); background: rgba(79,209,197,0.06); transform: translateY(-1px); }
+  .contact-chip svg{ width:15px; height:15px; flex-shrink:0; }
+  .contact-chip .cmd{ color: var(--muted); }
+
+  /* ===== ABOUT ===== */
+  .about-grid{ display:grid; grid-template-columns: 1fr 1fr; gap:48px; align-items:start; }
+  .about-grid p{ color: var(--muted); margin-bottom:14px; font-size:15px; }
+  .about-grid strong{ color: var(--text); font-weight:600; }
+  .facts{ display:grid; gap:14px; }
+  .fact{
+    border:1px solid var(--line); border-radius:10px; padding:16px 18px;
+    background: var(--surface);
+  }
+  .fact .k{ font-family:'JetBrains Mono', monospace; font-size:11px; color: var(--signal); text-transform:uppercase; letter-spacing:.08em; margin-bottom:6px; }
+  .fact .v{ font-size:14px; }
+  @media (max-width:760px){ .about-grid{ grid-template-columns:1fr; } }
+
+  /* ===== SKILLS ===== */
+  .skills-cats{ display:grid; grid-template-columns: repeat(auto-fit, minmax(230px,1fr)); gap:20px; }
+  .skill-card{ border:1px solid var(--line); background: var(--surface); border-radius:10px; padding:22px; }
+  .skill-card h3{ font-family:'JetBrains Mono', monospace; font-size:14px; color: var(--stream); margin-bottom:14px; }
+  .tag-row{ display:flex; flex-wrap:wrap; gap:8px; }
+  .tag{
+    font-family:'JetBrains Mono', monospace; font-size:12px;
+    padding:6px 10px; border-radius:6px; border:1px solid var(--line);
+    color: var(--text); background: rgba(255,255,255,0.02);
+  }
+
+  /* ===== PROJECTS ===== */
+  .projects-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(280px,1fr)); gap:22px; }
+  .project-card{
+    border:1px solid var(--line); background: var(--surface);
+    border-radius:12px; padding:24px; display:flex; flex-direction:column; gap:14px;
+    text-decoration:none; color:var(--text);
+    transition: border-color .15s ease, transform .15s ease;
+  }
+  .project-card:hover{ border-color: var(--stream); transform: translateY(-2px); }
+  .project-card .tag-row{ margin-top:auto; }
+  .project-card h3{ font-size:17px; font-weight:600; }
+  .project-card p{ color: var(--muted); font-size:14px; }
+  .project-link{
+    font-family:'JetBrains Mono', monospace; font-size:12.5px; color: var(--signal);
+    display:flex; align-items:center; gap:6px;
+  }
+  .project-link svg{ width:13px; height:13px; }
+
+  /* ===== CERTIFICATES ===== */
+  .cert-grid{ display:grid; grid-template-columns: repeat(auto-fit, minmax(240px,1fr)); gap:18px; }
+  .cert-card{
+    border:1px solid var(--line); background: var(--surface);
+    border-radius:10px; padding:18px; display:flex; align-items:center; gap:14px;
+    text-decoration:none; color: var(--text);
+    transition: border-color .15s ease, background .15s ease;
+  }
+  .cert-card:hover{ border-color: var(--signal); background: rgba(242,184,74,0.05); }
+  .cert-icon{
+    width:38px; height:38px; border-radius:8px; flex-shrink:0;
+    background: var(--surface-2); border:1px solid var(--line);
+    display:flex; align-items:center; justify-content:center; color: var(--signal);
+  }
+  .cert-icon svg{ width:18px; height:18px; }
+  .cert-meta .t{ font-size:14px; font-weight:600; }
+  .cert-meta .s{ font-size:12px; color: var(--muted); font-family:'JetBrains Mono', monospace; }
+  .cert-note{
+    margin-top:22px; font-size:13px; color: var(--muted);
+    border-left:2px solid var(--stream); padding-left:14px;
+  }
+  .cert-note code{ font-family:'JetBrains Mono', monospace; color: var(--stream); font-size:12px; }
+
+  /* ===== EDIT CONTROLS ===== */
+  .edit-btn{
+    font-family:'JetBrains Mono', monospace; font-size:12px;
+    padding:8px 14px; border-radius:7px; border:1px solid var(--line);
+    background: rgba(255,255,255,0.02); color: var(--muted); cursor:pointer;
+    margin-top:18px; position:relative; z-index:2;
+    transition: border-color .15s, color .15s;
+  }
+  .edit-btn:hover{ border-color: var(--stream); color: var(--text); }
+  .edit-btn.active{ border-color: var(--signal); color: var(--signal); }
+  [contenteditable="true"]{ outline:1px dashed var(--signal); border-radius:4px; padding:2px 4px; }
+
+  .avatar-wrap{ position:relative; flex-shrink:0; }
+  .avatar-overlay{
+    position:absolute; inset:0; border-radius:50%;
+    background: rgba(0,0,0,0.55);
+    display:none; align-items:center; justify-content:center;
+    font-family:'JetBrains Mono', monospace; font-size:10px; text-align:center;
+    color:#fff; cursor:pointer; line-height:1.3;
+  }
+  .avatar-wrap.editing .avatar-overlay{ display:flex; }
+
+  .add-panel{
+    margin-top:22px; border:1px solid var(--line); border-radius:10px;
+    background: var(--surface); overflow:hidden;
+  }
+  .add-panel summary{
+    list-style:none; cursor:pointer; padding:14px 18px;
+    font-family:'JetBrains Mono', monospace; font-size:13px; color: var(--stream);
+    display:flex; align-items:center; gap:8px;
+  }
+  .add-panel summary::before{ content:"▸"; color: var(--signal); transition: transform .15s; }
+  .add-panel[open] summary::before{ transform: rotate(90deg); }
+  .add-panel summary::-webkit-details-marker{ display:none; }
+  .add-form{ padding:0 18px 18px; display:grid; gap:10px; }
+  .add-form input, .add-form textarea, .add-form select{
+    width:100%; background: var(--surface-2); border:1px solid var(--line);
+    border-radius:7px; padding:10px 12px; color: var(--text); font-family:'Inter', sans-serif;
+    font-size:13px; resize:vertical;
+  }
+  .add-form input:focus, .add-form textarea:focus{ outline:none; border-color: var(--stream); }
+  .add-form button{
+    font-family:'JetBrains Mono', monospace; font-size:12.5px;
+    background: rgba(242,184,74,0.1); color: var(--signal);
+    border:1px solid var(--signal); border-radius:7px; padding:10px 14px;
+    cursor:pointer; justify-self:start; transition: background .15s;
+  }
+  .add-form button:hover{ background: rgba(242,184,74,0.18); }
+
+  .tag-add-form{ display:flex; gap:6px; margin-top:10px; }
+  .tag-add-form input{
+    flex:1; background: var(--surface-2); border:1px solid var(--line);
+    border-radius:6px; padding:6px 10px; color: var(--text); font-size:12px;
+    font-family:'JetBrains Mono', monospace;
+  }
+  .tag-add-form input:focus{ outline:none; border-color: var(--stream); }
+  .tag-add-form button{
+    background: rgba(79,209,197,0.1); color: var(--stream); border:1px solid var(--stream);
+    border-radius:6px; padding:6px 12px; font-size:13px; cursor:pointer; font-weight:700;
+  }
+
+  .remove-x{
+    margin-left:6px; color: var(--muted); cursor:pointer; font-weight:700;
+  }
+  .remove-x:hover{ color:#e35d5d; }
+  .project-card{ position:relative; }
+  .project-card .remove-x, .cert-card .remove-x{
+    position:absolute; top:10px; right:10px;
+    background: rgba(0,0,0,0.4); border:1px solid var(--line); border-radius:6px;
+    padding:4px 8px; font-family:'JetBrains Mono', monospace; font-size:11px;
+    color: var(--muted); font-weight:400;
+  }
+  .project-card .remove-x:hover, .cert-card .remove-x:hover{
+    color:#e35d5d; border-color:#e35d5d; background: rgba(227,93,93,0.1);
+  }
+  .cert-card{ position:relative; padding-right:80px; }
+
+  .save-bar{
+    position:fixed; bottom:22px; right:22px; z-index:100;
+    display:flex; gap:10px; align-items:center;
+  }
+  .save-bar button{
+    font-family:'JetBrains Mono', monospace; font-size:13px;
+    padding:12px 18px; border-radius:30px; cursor:pointer;
+    border:1px solid var(--line); background: var(--surface-2); color: var(--text);
+    box-shadow: 0 4px 18px rgba(0,0,0,0.4);
+    transition: border-color .15s, transform .15s;
+  }
+  .save-bar button:hover{ transform: translateY(-2px); }
+  .save-bar .primary{ border-color: var(--signal); color: var(--signal); }
+  @media (max-width:560px){
+    .save-bar{ right:12px; bottom:12px; }
+    .save-bar button{ padding:10px 14px; font-size:12px; }
+  }
+
+  /* ===== FOOTER ===== */
+  footer{ padding:36px 0; text-align:center; color: var(--muted); font-size:13px; font-family:'JetBrains Mono', monospace; }
+</style>
+</head>
+<body>
+
+<nav>
+  <div class="wrap">
+    <div class="brand">Olice<span class="dot">.</span>Mandevu</div>
+    <button class="nav-toggle" id="navToggle">☰</button>
+    <ul id="navList">
+      <li><a href="#about">About</a></li>
+      <li><a href="#skills">Skills</a></li>
+      <li><a href="#projects">Projects</a></li>
+      <li><a href="#certificates">Certificates</a></li>
+      <li><a href="#others">Others</a></li>
+      <li><a href="#contact">Contact</a></li>
+    </ul>
+  </div>
+</nav>
+
+<header class="header" id="headerBox">
+  <div class="header-grid"></div>
+  <div class="wrap">
+    <div class="eyebrow">Open to opportunities</div>
+    <div class="identity">
+      <div class="avatar-wrap" id="avatarWrap">
+        <!-- Replace the src below with your own photo, e.g. "assets/profile.jpg" -->
+        <img class="avatar" src="assets/profile2.jpg" alt="Olice Mandevu" id="avatarImg">
+        <label class="avatar-overlay" for="avatarUpload">Change<br>photo</label>
+      </div>
+      <input type="file" id="avatarUpload" accept="image/*" style="display:none">
+      <div class="name" id="nameText">Olice&nbsp;Mandevu</div>
+    </div>
+    <div class="role-line">
+      <span class="prompt">$</span>
+      <span id="role-word">Data Analyst</span>
+      <span class="cursor"></span>
+    </div>
+    <p class="tagline" id="taglineText">Bsc Data Science student turning messy, real-world datasets — from exam results to public health records — into models and dashboards that hold up outside the classroom.</p>
+    <button class="edit-btn" id="editProfileBtn">✎ Edit profile</button>
+    <div class="divider"></div>
+    <div class="contacts" id="contact">
+      <a class="contact-chip" href="https://github.com/olice21" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M12 .5C5.73.5.98 5.24.98 11.52c0 4.84 3.14 8.94 7.5 10.39.55.1.75-.24.75-.53 0-.26-.01-1.13-.02-2.04-3.05.66-3.7-1.3-3.7-1.3-.5-1.28-1.22-1.62-1.22-1.62-1-.68.08-.67.08-.67 1.1.08 1.68 1.13 1.68 1.13.98 1.68 2.58 1.2 3.2.92.1-.71.38-1.2.7-1.48-2.44-.28-5-1.22-5-5.43 0-1.2.43-2.18 1.13-2.95-.11-.28-.49-1.4.11-2.92 0 0 .92-.3 3.02 1.13a10.4 10.4 0 0 1 5.5 0c2.1-1.43 3.02-1.13 3.02-1.13.6 1.52.22 2.64.11 2.92.7.77 1.13 1.75 1.13 2.95 0 4.22-2.57 5.15-5.02 5.42.39.34.74 1.02.74 2.06 0 1.48-.01 2.68-.01 3.05 0 .29.2.64.76.53 4.36-1.45 7.49-5.55 7.49-10.39C23.02 5.24 18.27.5 12 .5z"/></svg>
+        <span class="cmd">git remote</span> github
+      </a>
+      <a class="contact-chip" href="https://www.linkedin.com/in/olice-mandevu-80aaa3384/" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M20.45 20.45h-3.55v-5.57c0-1.33-.03-3.04-1.85-3.04-1.85 0-2.14 1.45-2.14 2.94v5.67H9.36V9h3.41v1.56h.05c.48-.9 1.63-1.85 3.36-1.85 3.6 0 4.27 2.37 4.27 5.45v6.29zM5.34 7.43a2.06 2.06 0 1 1 0-4.12 2.06 2.06 0 0 1 0 4.12zM7.12 20.45H3.56V9h3.56v11.45z"/></svg>
+        <span class="cmd">connect</span> linkedin
+      </a>
+      <a class="contact-chip" href="mailto:mandevuolice2@gmail.com">
+        <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M3 6h18v12H3z"/><path d="m3 7 9 6 9-6"/></svg>
+        <span class="cmd">mailto</span> email
+      </a>
+      <a class="contact-chip" href="https://wa.me/255679360527" target="_blank" rel="noopener">
+        <svg viewBox="0 0 24 24" fill="currentColor"><path d="M17.5 14.4c-.3-.1-1.7-.8-1.9-.9-.3-.1-.4-.1-.6.1-.2.3-.7.9-.8 1-.1.2-.3.2-.6.1-.3-.1-1.2-.4-2.3-1.4-.9-.8-1.4-1.7-1.6-2-.1-.3 0-.4.1-.6l.4-.5c.1-.1.2-.3.2-.4.1-.2 0-.3 0-.4L9.6 7.5c-.2-.4-.4-.4-.6-.4h-.5c-.2 0-.5.1-.7.3-.2.3-1 1-1 2.3 0 1.4 1 2.7 1.1 2.9.1.2 2 3.1 4.9 4.3.7.3 1.2.5 1.6.6.7.2 1.3.2 1.8.1.5-.1 1.7-.7 1.9-1.4.2-.7.2-1.2.2-1.4-.1-.1-.3-.2-.6-.3zM12 2C6.5 2 2 6.5 2 12c0 1.8.5 3.6 1.4 5.1L2 22l5-1.3c1.5.8 3.2 1.2 4.9 1.2h.1c5.5 0 10-4.5 10-10S17.5 2 12 2z"/></svg>
+        <span class="cmd">chat</span> whatsapp
+      </a>
+    </div>
+  </div>
+</header>
+
+<!-- ===== ABOUT ===== -->
+<section id="about">
+  <div class="wrap">
+    <div class="eyebrow">01 — About</div>
+    <h2>Who I am</h2>
+    <div class="about-grid">
+      <div>
+        <p>I'm currently taking <strong>Bachelor in Data Science at the </strong> <strong>Eastern Africa Statistical Training Centre (EASTC)</strong> in Dar es Salaam, Tanzania, working across the full data stack — from cleaning raw CSVs to shipping models people actually use.</p>
+        <p>Most of my recent work sits at the intersection of <strong>machine learning and public-interest data</strong>: classifying health-risk records, analysing data to build insights, and building lightweight tools for problems specific to the Tanzanian context — like a phone-theft alert concept built on SMS infrastructure.</p>
+        <p>I move comfortably between <strong>Python, R, SQL,Excel and Power BI</strong>, and I care about work that's reproducible: clean pipelines, documented workflows, and reports that a non-technical reader can still follow.</p>
+      </div>
+      <div class="facts">
+        <div class="fact"><div class="k">Based in</div><div class="v">Dar es Salaam, Tanzania</div></div>
+        <div class="fact"><div class="k">Currently</div><div class="v">BSc Data Science, EASTC</div></div>
+        <div class="fact"><div class="k">Focus areas</div><div class="v">Machine learning, big data pipelines, geospatial &amp; Data analysis</div></div>
+        <div class="fact"><div class="k">Languages</div><div class="v">English, Swahili</div></div>
+      </div>
+    </div>
+  </div>
+</section>
+
+<!-- ===== SKILLS ===== -->
+<section id="skills">
+  <div class="wrap">
+    <div class="eyebrow">02 — Skills</div>
+    <h2>What I work with</h2>
+    <div class="skills-cats" id="skillsGrid">
+      <div class="skill-card">
+        <h3>Languages</h3>
+        <div class="tag-row">
+          <span class="tag">Python</span><span class="tag">R</span><span class="tag">SQL</span><span class="tag">Power BI</span><span class="tag">Excel</span>
+        </div>
+        <form class="tag-add-form"><input type="text" placeholder="Add skill..."><button type="submit">+</button></form>
+      </div>
+      <div class="skill-card">
+        <h3>Machine Learning</h3>
+        <div class="tag-row">
+          <span class="tag">Random Forest</span><span class="tag">supervised ML</span><span class="tag">Anomaly Detection</span>
+        </div>
+        <form class="tag-add-form"><input type="text" placeholder="Add skill..."><button type="submit">+</button></form>
+      </div>
+      <div class="skill-card">
+        <h3>Data Engineering</h3>
+        <div class="tag-row">
+          <span class="tag">ETL Pipelines</span><span class="tag">MySQL</span><span class="tag">PostgreSQL</span><span class="tag">MongoDB</span><span class="tag">DBeaver</span>
+        </div>
+        <form class="tag-add-form"><input type="text" placeholder="Add skill..."><button type="submit">+</button></form>
+      </div>
+      <div class="skill-card">
+        <h3>Analysis &amp; Visualization</h3>
+        <div class="tag-row">
+          <span class="tag">dplyr</span><span class="tag">ggplot2</span><span class="tag">matplotlib</span><span class="tag">R Shiny</span>
+        </div>
+        <form class="tag-add-form"><input type="text" placeholder="Add skill..."><button type="submit">+</button></form>
+      </div>
+      <div class="skill-card">
+        <h3>Geospatial</h3>
+        <div class="tag-row">
+          <span class="tag">sf</span><span class="tag">geodata</span><span class="tag">Tanzania admin boundaries</span>
+        </div>
+        <form class="tag-add-form"><input type="text" placeholder="Add skill..."><button type="submit">+</button></form>
+      </div>
+    </div>
+
+    <details class="add-panel">
+      <summary>+ add skill category</summary>
+      <form class="add-form" id="skillCatForm">
+        <input type="text" id="catName" placeholder="Category name (e.g. Cloud &amp; DevOps)" required>
+        <input type="text" id="catTags" placeholder="Skills, comma separated (e.g. AWS, Docker, Git)" required>
+        <button type="submit">Add category</button>
+      </form>
+    </details>
+  </div>
+</section>
+
+<!-- ===== PROJECTS ===== -->
+<section id="projects">
+  <div class="wrap">
+    <div class="eyebrow">03 — Projects</div>
+    <h2>Selected work</h2>
+    <div class="projects-grid" id="projectsGrid">
+
+      <a class="project-card" href="https://github.com/your-username/stolen-phone-security" target="_blank" rel="noopener">
+        <button class="remove-x" data-remove>✕ remove</button>
+        <h3>Stolen Phone Security System</h3>
+        <p>Concept system combining an R Shiny dashboard, a Plumber REST API, and an Android agent, with SMS alerts via Africa's Talking and MongoDB as the backing store.</p>
+        <div class="tag-row"><span class="tag">R</span><span class="tag">Shiny</span><span class="tag">Plumber</span><span class="tag">MongoDB</span></div>
+        <span class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+      </a>
+
+      <a class="project-card" href="https://github.com/your-username/hiv-risk-classification" target="_blank" rel="noopener">
+        <button class="remove-x" data-remove>✕ remove</button>
+        <h3>HIV Risk Semi-Supervised Classification</h3>
+        <p>Semi-supervised ML workflow in Orange Data Mining over a stratified labelled/unlabelled split, predicting binary risk outcomes with a full academic write-up.</p>
+        <div class="tag-row"><span class="tag">Orange</span><span class="tag">Semi-supervised ML</span></div>
+        <span class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+      </a>
+
+      <a class="project-card" href="https://github.com/your-username/necta-results-analysis" target="_blank" rel="noopener">
+        <button class="remove-x" data-remove>✕ remove</button>
+        <h3>NECTA CSEE Results Analysis</h3>
+        <p>Scraped and analyzed national exam results (matokeo.necta.go.tz) for Kinondoni District, building Python ETL pipelines with performance-tier visualizations.</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">R</span><span class="tag">Web Scraping</span></div>
+        <span class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+      </a>
+
+      <a class="project-card" href="https://github.com/your-username/traffic-congestion-rf" target="_blank" rel="noopener">
+        <button class="remove-x" data-remove>✕ remove</button>
+        <h3>Traffic Congestion Classifier</h3>
+        <p>Random Forest model predicting congestion levels from traffic sensor data, reaching roughly 95% classification accuracy.</p>
+        <div class="tag-row"><span class="tag">Python</span><span class="tag">Random Forest</span></div>
+        <span class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+      </a>
+
+      <a class="project-card" href="https://github.com/your-username/tanzania-geospatial" target="_blank" rel="noopener">
+        <button class="remove-x" data-remove>✕ remove</button>
+        <h3>Tanzania Geospatial Analysis</h3>
+        <p>Spatial visualization of administrative boundaries and regional indicators using R's sf and geodata packages.</p>
+        <div class="tag-row"><span class="tag">R</span><span class="tag">sf</span><span class="tag">geodata</span></div>
+        <span class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg></span>
+      </a>
+
+    </div>
+    <p class="cert-note">Click <strong>✕ remove</strong> on any card (including these sample ones) to delete it, then use <strong>"Save updated site"</strong> to make it permanent.</p>
+
+    <details class="add-panel">
+      <summary>+ add project</summary>
+      <form class="add-form" id="projectForm">
+        <input type="text" id="pTitle" placeholder="Project title" required>
+        <input type="url" id="pLink" placeholder="Project link (https://github.com/...)" required>
+        <textarea id="pDesc" rows="2" placeholder="Short description" required></textarea>
+        <input type="text" id="pTags" placeholder="Tags, comma separated (e.g. Python, Random Forest)">
+        <button type="submit">Add project</button>
+      </form>
+    </details>
+  </div>
+</section>
+
+<!-- ===== CERTIFICATES ===== -->
+<section id="certificates">
+  <div class="wrap">
+    <div class="eyebrow">04 — Certificates</div>
+    <h2>Certificates</h2>
+    <div class="cert-grid" id="certGrid">
+      <a class="cert-card" href="certificates/AILiteracy_Badge20260626-30-9ne4zu.pdf"target="_blank" rel="noopener">AI Literacy</a>
+        <a class="cert-card" href="certificates/89-professional-foundations-certificate-olice-mandevu.pdf"target="_blank" rel="noopener">Professional foundations</a>
+        <button class="remove-x" data-remove>✕</button>
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        </div>
+        <div class="cert-meta">
+          <div class="t">Sample Certificate</div>
+          <div class="s">Issued by — replace me</div>
+        </div>
+      </a>
+    </div>
+
+    <details class="add-panel">
+      <summary>+ add certificate</summary>
+      <form class="add-form" id="certForm">
+        <input type="text" id="cName" placeholder="Certificate name" required>
+        <input type="text" id="cIssuer" placeholder="Issued by (e.g. Coursera, EASTC)" required>
+        <input type="file" id="cFile" accept=".pdf,image/*" required>
+        <button type="submit">Add certificate</button>
+      </form>
+    </details>
+
+    <p class="cert-note">
+      Certificates you add here appear instantly with their name and issuer. To make them show up permanently for site visitors (not just in this browser), click <strong>"Save updated site"</strong> below after adding, then re-upload that downloaded file to your host.
+    </p>
+  </div>
+</section>
+
+<!-- ===== OTHERS (DOCUMENTS) ===== -->
+<section id="others">
+  <div class="wrap">
+    <div class="eyebrow">05 — Others</div>
+    <h2>Others</h2>
+    <div class="cert-grid" id="othersGrid">
+      <a class="cert-card" href="certificates/AILiteracy_Badge20260626-30-9ne4zu.pdf" target="_blank" rel="noopener">AI Literacy</a>
+        <button class="remove-x" data-remove>✕</button>
+        <div class="cert-icon">
+          <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>
+        </div>
+        <div class="cert-meta">
+          <div class="t">Sample Document</div>
+          <div class="s">e.g. CV, transcript, recommendation letter</div>
+        </div>
+      </a>
+    </div>
+
+    <details class="add-panel">
+      <summary>+ add document</summary>
+      <form class="add-form" id="otherForm">
+        <input type="text" id="oName" placeholder="Document name (e.g. CV, Transcript)" required>
+        <input type="file" id="oFile" accept=".pdf,image/*,.doc,.docx" required>
+        <button type="submit">Add document</button>
+      </form>
+    </details>
+
+    <p class="cert-note">
+      Use this section for anything that isn't a certificate — your CV, academic transcript, reference letters, and so on.
+    </p>
+  </div>
+</section>
+
+<footer>
+  <div class="wrap">© 2026 Olice Mandevu — Built with data, one query at a time.</div>
+</footer>
+
+<div class="save-bar">
+  <button class="primary" id="saveBtn">⬇ Save updated site</button>
+</div>
+
+<script>
+  // rotating role words
+  const roles = ["Data Analyst", "Data Engineer", "Data Scientist"];
+  const el = document.getElementById('role-word');
+  let roleIndex = 0;
+  function typeOut(word, cb){ let i=word.length; const t=setInterval(()=>{ el.textContent=word.slice(0,i); i--; if(i<0){clearInterval(t);cb();} },35); }
+  function typeIn(word, cb){ let i=0; const t=setInterval(()=>{ el.textContent=word.slice(0,i); i++; if(i>word.length){clearInterval(t);cb();} },55); }
+  function cycle(){ setTimeout(()=>{ typeOut(roles[roleIndex], ()=>{ roleIndex=(roleIndex+1)%roles.length; typeIn(roles[roleIndex], cycle); }); }, 1800); }
+  cycle();
+
+  // background data-glyph columns
+  const box = document.getElementById('headerBox');
+  const glyphs = "01";
+  for(let c=0;c<14;c++){
+    const col=document.createElement('div');
+    col.className='stream-col';
+    col.style.left=(Math.random()*100)+'%';
+    col.style.animationDuration=(6+Math.random()*8)+'s';
+    col.style.animationDelay=(Math.random()*6)+'s';
+    let text=''; for(let r=0;r<16;r++){ text+=glyphs[Math.floor(Math.random()*glyphs.length)]+'\n'; }
+    col.textContent=text;
+    box.appendChild(col);
+  }
+
+  // profile photo fallback — shows a placeholder icon if assets/profile.jpg isn't found
+  const avatarImg = document.getElementById('avatarImg');
+  avatarImg.addEventListener('error', () => {
+    const placeholder = document.createElement('div');
+    placeholder.className = 'avatar-placeholder';
+    placeholder.innerHTML = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><circle cx="12" cy="8" r="4"/><path d="M4 21v-1a7 7 0 0 1 14 0v1"/></svg>';
+    avatarImg.replaceWith(placeholder);
+  }, { once: true });
+
+  // mobile nav toggle
+  const navToggle=document.getElementById('navToggle');
+  const navList=document.getElementById('navList');
+  navToggle.addEventListener('click', ()=> navList.classList.toggle('open'));
+  navList.querySelectorAll('a').forEach(a => a.addEventListener('click', ()=> navList.classList.remove('open')));
+
+  // ===== helper: read a file as a data URL =====
+  function readFileAsDataURL(file){
+    return new Promise((resolve, reject) => {
+      const reader = new FileReader();
+      reader.onload = () => resolve(reader.result);
+      reader.onerror = reject;
+      reader.readAsDataURL(file);
+    });
+  }
+  const docIconSVG = '<svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M14 2H6a2 2 0 0 0-2 2v16a2 2 0 0 0 2 2h12a2 2 0 0 0 2-2V8z"/><path d="M14 2v6h6"/></svg>';
+
+  // ===== profile edit mode =====
+  const editBtn = document.getElementById('editProfileBtn');
+  const nameText = document.getElementById('nameText');
+  const taglineText = document.getElementById('taglineText');
+  const avatarWrap = document.getElementById('avatarWrap');
+  const avatarUpload = document.getElementById('avatarUpload');
+  let editing = false;
+  editBtn.addEventListener('click', () => {
+    editing = !editing;
+    nameText.contentEditable = editing;
+    taglineText.contentEditable = editing;
+    avatarWrap.classList.toggle('editing', editing);
+    editBtn.classList.toggle('active', editing);
+    editBtn.textContent = editing ? '✓ Done editing' : '✎ Edit profile';
+  });
+  avatarUpload.addEventListener('change', async (e) => {
+    const file = e.target.files[0];
+    if(!file) return;
+    const dataUrl = await readFileAsDataURL(file);
+    let img = document.getElementById('avatarImg');
+    if(!img){
+      // placeholder is currently shown instead of the <img> — recreate it
+      const placeholder = avatarWrap.querySelector('.avatar-placeholder');
+      img = document.createElement('img');
+      img.className = 'avatar';
+      img.id = 'avatarImg';
+      img.alt = 'Profile photo';
+      placeholder.replaceWith(img);
+    }
+    img.src = dataUrl;
+  });
+
+  // ===== add a skill tag to a category =====
+  document.querySelectorAll('.tag-add-form').forEach(form => {
+    form.addEventListener('submit', (e) => {
+      e.preventDefault();
+      const input = form.querySelector('input');
+      const val = input.value.trim();
+      if(!val) return;
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = val;
+      form.parentElement.querySelector('.tag-row').appendChild(tag);
+      input.value = '';
+    });
+  });
+
+  // ===== add a new skill category =====
+  document.getElementById('skillCatForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const name = document.getElementById('catName').value.trim();
+    const tags = document.getElementById('catTags').value.split(',').map(t => t.trim()).filter(Boolean);
+    if(!name || tags.length === 0) return;
+    const card = document.createElement('div');
+    card.className = 'skill-card';
+    card.innerHTML = `<h3>${name}</h3><div class="tag-row">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      <form class="tag-add-form"><input type="text" placeholder="Add skill..."><button type="submit">+</button></form>`;
+    document.getElementById('skillsGrid').appendChild(card);
+    card.querySelector('.tag-add-form').addEventListener('submit', (ev) => {
+      ev.preventDefault();
+      const input = ev.target.querySelector('input');
+      const val = input.value.trim();
+      if(!val) return;
+      const tag = document.createElement('span');
+      tag.className = 'tag';
+      tag.textContent = val;
+      card.querySelector('.tag-row').appendChild(tag);
+      input.value = '';
+    });
+    e.target.reset();
+    e.target.closest('details').open = false;
+  });
+
+  // ===== add a new project =====
+  document.getElementById('projectForm').addEventListener('submit', (e) => {
+    e.preventDefault();
+    const title = document.getElementById('pTitle').value.trim();
+    const link = document.getElementById('pLink').value.trim();
+    const desc = document.getElementById('pDesc').value.trim();
+    const tags = document.getElementById('pTags').value.split(',').map(t => t.trim()).filter(Boolean);
+    if(!title || !link || !desc) return;
+    const card = document.createElement('a');
+    card.className = 'project-card';
+    card.href = link;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.innerHTML = `<button class="remove-x" data-remove>✕ remove</button>
+      <h3>${title}</h3><p>${desc}</p>
+      <div class="tag-row">${tags.map(t => `<span class="tag">${t}</span>`).join('')}</div>
+      <span class="project-link">View project <svg viewBox="0 0 24 24" fill="none" stroke="currentColor" stroke-width="2"><path d="M7 17 17 7M7 7h10v10"/></svg></span>`;
+    document.getElementById('projectsGrid').appendChild(card);
+    e.target.reset();
+    e.target.closest('details').open = false;
+  });
+
+  // ===== add a certificate (name + issuer + file) =====
+  document.getElementById('certForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('cName').value.trim();
+    const issuer = document.getElementById('cIssuer').value.trim();
+    const file = document.getElementById('cFile').files[0];
+    if(!name || !issuer || !file) return;
+    const dataUrl = await readFileAsDataURL(file);
+    const card = document.createElement('a');
+    card.className = 'cert-card';
+    card.href = dataUrl;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.setAttribute('download', file.name);
+    card.innerHTML = `<button class="remove-x" data-remove>✕</button>
+      <div class="cert-icon">${docIconSVG}</div>
+      <div class="cert-meta"><div class="t">${name}</div><div class="s">Issued by ${issuer}</div></div>`;
+    document.getElementById('certGrid').appendChild(card);
+    e.target.reset();
+    e.target.closest('details').open = false;
+  });
+
+  // ===== add a document under OTHERS (name + file) =====
+  document.getElementById('otherForm').addEventListener('submit', async (e) => {
+    e.preventDefault();
+    const name = document.getElementById('oName').value.trim();
+    const file = document.getElementById('oFile').files[0];
+    if(!name || !file) return;
+    const dataUrl = await readFileAsDataURL(file);
+    const card = document.createElement('a');
+    card.className = 'cert-card';
+    card.href = dataUrl;
+    card.target = '_blank';
+    card.rel = 'noopener';
+    card.setAttribute('download', file.name);
+    card.innerHTML = `<button class="remove-x" data-remove>✕</button>
+      <div class="cert-icon">${docIconSVG}</div>
+      <div class="cert-meta"><div class="t">${name}</div><div class="s">${file.name}</div></div>`;
+    document.getElementById('othersGrid').appendChild(card);
+    e.target.reset();
+    e.target.closest('details').open = false;
+  });
+
+  // ===== remove any project / certificate / document card =====
+  document.addEventListener('click', (e) => {
+    const btn = e.target.closest('[data-remove]');
+    if(!btn) return;
+    e.preventDefault();
+    e.stopPropagation();
+    const card = btn.closest('.project-card, .cert-card');
+    if(card && confirm('Remove this item?')) card.remove();
+  });
+
+  // ===== save updated site as a downloadable file =====
+  document.getElementById('saveBtn').addEventListener('click', () => {
+    // turn off edit mode so contenteditable outlines don't get baked into the saved file
+    if(editing){
+      editing = false;
+      nameText.contentEditable = false;
+      taglineText.contentEditable = false;
+      avatarWrap.classList.remove('editing');
+      editBtn.classList.remove('active');
+      editBtn.textContent = '✎ Edit profile';
+    }
+    const htmlContent = '<!DOCTYPE html>\n' + document.documentElement.outerHTML;
+    const blob = new Blob([htmlContent], { type: 'text/html' });
+    const url = URL.createObjectURL(blob);
+    const a = document.createElement('a');
+    a.href = url;
+    a.download = 'portfolio.html';
+    a.click();
+    URL.revokeObjectURL(url);
+  });
+</script>
+
+</body>
+</html>
